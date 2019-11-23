@@ -1,0 +1,3 @@
+flex -o calc.lex.c calc.l 
+bison -d calc.y
+gcc  -o calc calc.lex.c calc.tab.c -lfl -lm 
