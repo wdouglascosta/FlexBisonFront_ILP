@@ -41,14 +41,14 @@ Input: /* empty */;
 Input: Input Line;
 
 Line: END
-Line: REAL {printf("isso é um real: %f\n", $1);startTree(); printTree("charizanr");}
-Line: INTEGER {printf("isso é um inteiro: %d", $1);}
+
 Line: Expression END { printTree(); }
 Line: PRINT Expression { printf("esse é o meu print: %f\n", $2);}
 Line: TAG EQUAL Expression {printf("o valor de %s: %f\n", $1, $3);}
 
-Expression: INTEGER { $$=$1; };
-Expression: REAL { $$=$1; };
+
+Expression: INTEGER {printf("isso é um inteiro: %d", $1); };
+Expression: REAL { printf("novo real: %f\n", $1);};
 
 Expression: REAL PLUS REAL { startTree();create_OP_BIN_F($1, $3, "PLUS"); printf("foi\n");};
 Expression: INTEGER PLUS INTEGER { startTree();create_OP_BIN_F($1, $3, "PLUS"); }; 

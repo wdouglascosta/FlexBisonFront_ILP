@@ -53,7 +53,6 @@ typedef struct NODE {
 
 
     struct NODE *next;
-    struct NODE *sub;
 }NODE;
 
 
@@ -96,35 +95,23 @@ void printTree(){
 }
 
 void insertLastNode(struct NODE *tree, struct NODE *new){
-    printf("caiu aqui\n");
-
         if (tree ->next == NULL){
             tree ->next = new;
         } else {
             insertLastNode(tree ->next, new);
         };
-    
-    
-    
 }
 
 void create_OP_BIN_F(int a, int b, char *OP){
     NODE *new;
     cont++;
-    printf("cont %d\n", cont);
-    printf("param a: %d\n", a, "\n");
-    printf("param b:  %d\n", b, "\n");
-    printf("OP:  %s\n", OP, "\n");
-
     NODE_val values ;
     values.OP_BIN_F.OPERATION = OP;
     values.OP_BIN_F.VAL1.integer = a;
     values.OP_BIN_F.VAL2.integer = b;
 
     new = createNode(1, values, cont, cont+1);
-    printf("valor 1: %d", new -> VALUES.OP_BIN_F.VAL1.integer);
-    // printf("valor 2: ");
-    // printf(new -> VALUES.OP_BIN_F.VAL2.integer);
+
     insertLastNode(tree, new);
     
 }
