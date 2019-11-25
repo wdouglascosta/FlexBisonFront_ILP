@@ -63,6 +63,7 @@ int teste1;
 
 void startTree(){
     tree = (NODE *) malloc(sizeof(NODE));
+    tree -> LINE = 789; 
 }
 
 struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
@@ -74,8 +75,8 @@ struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
     return node;
 };
 
-void teste(){
-    printf("chamada interna de funçãon\n");
+void teste(char *c){
+    printf("chamada interna de função, valor: %s",c,"\n");
 }
 
 void printTree(){
