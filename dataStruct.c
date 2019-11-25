@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "dataStruct.h"
 
 
 
@@ -9,19 +10,28 @@ union NUMBER{
 };
 
 typedef enum TP {
-    TP_opbin,
+    TP_opbin_F,
+    TP_opbin_E,
     TP_atrib,
+    TP_unit_value,
     TP_print
 } TP;
 
 typedef union 
 {
-    struct OP_BIN
+    struct OP_BIN_F
     {
-        char *TAG;
+        char *OPERATION;
         union NUMBER VAL1;
         union NUMBER VAL2;
-    } OP_BIN;
+    } OP_BIN_F;
+
+    struct OP_BIN_E
+    {
+        char *OPERATION;
+        struct NODE *SUB1;
+        struct NODE *SUB2;
+    } OP_BIN_E;
 
     struct OP_ATR
     {
@@ -29,6 +39,8 @@ typedef union
         union NUMBER VAL1
     } OP_ATR;
 
+
+    union NUMBER UNITVALUE;
     char *OP_PRINT;       
 } NODE_val;
 
@@ -47,6 +59,11 @@ typedef struct NODE {
 
 
 NODE *tree ;
+int teste1;
+
+void startTree(){
+    tree = (NODE *) malloc(sizeof(NODE));
+}
 
 struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
     struct NODE *node = malloc(sizeof(NODE));
@@ -57,51 +74,49 @@ struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
     return node;
 };
 
+void teste(){
+    printf("chamada interna de funçãon\n");
+}
 
-NODE *teste(){
-    NODE *noTeste = malloc(sizeof(NODE));
-    noTeste -> next = NULL;
-    noTeste -> sub = NULL;
-    noTeste -> LINE = 66;
-    return noTeste;
-};
-
-int main(int argc, char const *argv[]){
-    // tree -> COL = 0;
-    // tree -> LINE = 0;
-    // tree -> Type = TP_opbin;
-    // tree -> VALUES.OP_ATR.TAG = "oooi";
-    // tree -> VALUES.OP_ATR.VAL1.integer = 12;
-
-    NODE *list = (NODE *) malloc(sizeof(NODE));
-    NODE *no = (NODE *) malloc(sizeof(NODE));
-    NODE *no2 = (NODE *) malloc(sizeof(NODE));
-
-
-    NODE_val values ;
-    values.OP_BIN.TAG = "varTeste1";
-    values.OP_BIN.VAL1.integer = 3;
-    values.OP_BIN.VAL2.integer = 5;
-
-    list = createNode(1, values, 1, 4);
-    no = createNode(1, values, 7, 8);
-    no2 = createNode(1, values, 50, 78);
-    // tree ->next = no;
-
-    list ->next = no;
-    no ->next = no2;
-    
+void printTree(){
     NODE *tmp;
-    tmp = list;
+    tmp = tree;
     while( tmp != NULL){
         printf("linha:");
         printf("%d", tmp->LINE);
         printf("\n");
         tmp = tmp->next;
     }
-    
-    printf("imprime carai\n");
-
-    return 0;
-
 }
+
+// int main(int argc, char const *argv[]){
+
+
+//     NODE *no;
+//     NODE *no2;
+//     NODE *no3;
+
+
+//     NODE_val values ;
+//     values.OP_BIN_F.OPERATION = "ADD";
+//     values.OP_BIN_F.VAL1.integer = 3;
+//     values.OP_BIN_F.VAL2.integer = 5;
+
+//     no3 = createNode(1, values, 1, 4);
+//     no = createNode(1, values, 7, 8);
+//     no2 = createNode(1, values, 50, 78);
+//     // tree ->next = no;
+//     startTree();
+
+
+//     no3 ->next = no;
+//     no ->next = no2;
+//     tree -> next = no3;
+    
+//     printTree();
+    
+//     printf("fim\n");
+
+//     return 0;
+
+// }

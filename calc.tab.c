@@ -70,10 +70,10 @@
 
 #include <math.h>
 #include <stdio.h>
+#include "dataStruct.c"
 
 int yyerror (char const *s);
 extern int yylex (void);
-
 
 
 
@@ -1258,7 +1258,7 @@ yyreduce:
 
   case 6:
 #line 45 "calc.y" /* yacc.c:1652  */
-    {printf("isso é um inteiro: %d\n", (yyvsp[0].integer));}
+    {printf("isso é um inteiro: %d\n", (yyvsp[0].integer));teste();}
 #line 1263 "calc.tab.c" /* yacc.c:1652  */
     break;
 
@@ -1588,8 +1588,10 @@ int yyerror(char const *s) {
 int main() {
     int ret = yyparse();
     if (ret){
-	fprintf(stderr, "%d error found.\n",ret);
+	    fprintf(stderr, "%d error found.\n",ret);
     }
+
+
     return 0;
 }
 
