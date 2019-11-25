@@ -30,16 +30,19 @@ system_info()
 [[ -n $GER ]] || GER=3
 [[ -n $CRO ]] || CRO=50
 
-if [[ -n $1 && $1 == -h ]]; then
+if [[ -n $1 && $1 == clean ]]; then
 
-  system_info
+#   system_info
+    rm -rf *.o calc.lex.c calc.tab.* calc
+
+  
 else
+    rm -rf *.o calc.lex.c calc.tab.* calc
     gcc -c dataStruct.c -o dataStruct.o
 
-
-    flex  -o calc.lex.c calc.l
+    flex -o calc.lex.c calc.l
     bison -d calc.y 
     gcc -c calc.lex.c -o calc.lex.o
 
-    gcc -o calc calc.lex.o calc.tab.c -lfl -lm 
+    gcc -o calc  calc.lex.o calc.tab.c -lfl -lm 
 fi

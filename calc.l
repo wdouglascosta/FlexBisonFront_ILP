@@ -1,6 +1,7 @@
 %{
 
 #include "calc.tab.h"
+extern int col = 0;
 
 %}
 
@@ -14,12 +15,12 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 %%
 
 {white} { }
-{TAG} { yylval.str=strdup(yytext); return TAG;}
-{integer} {yylval.integer=atoi(yytext); return INTEGER;}
+{TAG} {col++; yylval.str=strdup(yytext); return TAG;}
+{integer} {col++; yylval.integer=atoi(yytext); return INTEGER;}
 {real} { yylval.num=atof(yytext); return REAL; }
 
 
-"print" return PRINT;
+"print" col ++; return PRINT;
 "+" return PLUS;
 "-" return MINUS;
 "*" return TIMES;

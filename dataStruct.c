@@ -2,15 +2,13 @@
 #include <stdlib.h>
 #include "dataStruct.h"
 
-
-
 union NUMBER{
     int integer;
     float real;
 };
 
 typedef enum TP {
-    TP_opbin_F,
+    TP_opbin_F = 1,
     TP_opbin_E,
     TP_atrib,
     TP_unit_value,
@@ -40,6 +38,7 @@ typedef union
     } OP_ATR;
 
 
+
     union NUMBER UNITVALUE;
     char *OP_PRINT;       
 } NODE_val;
@@ -59,11 +58,14 @@ typedef struct NODE {
 
 
 NODE *tree ;
-int teste1;
+int cont;
 
 void startTree(){
-    tree = (NODE *) malloc(sizeof(NODE));
-    tree -> LINE = 789; 
+    if (tree == NULL){
+        tree = (NODE *) malloc(sizeof(NODE));
+    }
+    
+    
 }
 
 struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
@@ -75,8 +77,9 @@ struct NODE *createNode(TP Type, NODE_val Values, int LINE, int COL){
     return node;
 };
 
-void teste(char *c){
-    printf("chamada interna de função, valor: %s",c,"\n");
+
+void teste(int c){
+    printf("chamada interna de função, valor: %d",c,"\n");
 }
 
 void printTree(){
@@ -85,39 +88,44 @@ void printTree(){
     while( tmp != NULL){
         printf("linha:");
         printf("%d", tmp->LINE);
+                printf(" - coluna:");
+        printf("%d", tmp->COL);
         printf("\n");
         tmp = tmp->next;
     }
 }
 
-// int main(int argc, char const *argv[]){
+void insertLastNode(struct NODE *tree, struct NODE *new){
+    printf("caiu aqui\n");
 
-
-//     NODE *no;
-//     NODE *no2;
-//     NODE *no3;
-
-
-//     NODE_val values ;
-//     values.OP_BIN_F.OPERATION = "ADD";
-//     values.OP_BIN_F.VAL1.integer = 3;
-//     values.OP_BIN_F.VAL2.integer = 5;
-
-//     no3 = createNode(1, values, 1, 4);
-//     no = createNode(1, values, 7, 8);
-//     no2 = createNode(1, values, 50, 78);
-//     // tree ->next = no;
-//     startTree();
-
-
-//     no3 ->next = no;
-//     no ->next = no2;
-//     tree -> next = no3;
+        if (tree ->next == NULL){
+            tree ->next = new;
+        } else {
+            insertLastNode(tree ->next, new);
+        };
     
-//     printTree();
     
-//     printf("fim\n");
+    
+}
 
-//     return 0;
+void create_OP_BIN_F(int a, int b, char *OP){
+    NODE *new;
+    cont++;
+    printf("cont %d\n", cont);
+    printf("param a: %d\n", a, "\n");
+    printf("param b:  %d\n", b, "\n");
+    printf("OP:  %s\n", OP, "\n");
 
-// }
+    NODE_val values ;
+    values.OP_BIN_F.OPERATION = OP;
+    values.OP_BIN_F.VAL1.integer = a;
+    values.OP_BIN_F.VAL2.integer = b;
+
+    new = createNode(1, values, cont, cont+1);
+    printf("valor 1: %d", new -> VALUES.OP_BIN_F.VAL1.integer);
+    // printf("valor 2: ");
+    // printf(new -> VALUES.OP_BIN_F.VAL2.integer);
+    insertLastNode(tree, new);
+    
+}
+

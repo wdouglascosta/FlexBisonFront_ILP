@@ -8,7 +8,7 @@ extern struct NODE *tree ;    // declaração de uma variável global
 void startTree();
 // struct NODE *teste();
 void printTree();
-void teste(char *c);
+void teste(int c);
 // int foo(long arg); // declaração de uma função
 // int bar(void);     // outra
 
