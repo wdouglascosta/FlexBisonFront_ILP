@@ -14,13 +14,13 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 
 %%
 
+"print" col ++; return PRINT;
 {white} { }
 {TAG} {col++; yylval.str=strdup(yytext); return TAG;}
 {integer} {col++; yylval.integer=atoi(yytext); return INTEGER;}
 {real} { yylval.num=atof(yytext); return REAL; }
 
 
-"print" col ++; return PRINT;
 "+" return PLUS;
 "-" return MINUS;
 "*" return TIMES;
@@ -30,3 +30,7 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 ")" return RIGHT;
 "=" return EQUAL;
 "\n" return END;
+
+%%
+
+// yylloc.firstline = 34

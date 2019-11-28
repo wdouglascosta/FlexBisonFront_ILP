@@ -38,11 +38,11 @@ if [[ -n $1 && $1 == clean ]]; then
   
 else
     rm -rf *.o calc.lex.c calc.tab.* calc
-    gcc -c dataStruct.c -o dataStruct.o
+    gcc -c -g dataStruct.c -o dataStruct.o
 
     flex -o calc.lex.c calc.l
     bison -d calc.y 
-    gcc -c calc.lex.c -o calc.lex.o
+    gcc -c -g calc.lex.c -o calc.lex.o
 
-    gcc -o calc  calc.lex.o calc.tab.c -lfl -lm 
+    gcc -g -o calc  calc.lex.o calc.tab.c -lfl -lm 
 fi

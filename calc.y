@@ -13,19 +13,22 @@ extern int yylex (void);
   char *str;
   double num;
   int integer;
+  struct NODE *node;
 }
 
 %token<num> NUMBER
 %token LEFT RIGHT
 %token PLUS MINUS TIMES DIVIDE POWER
 %token END
-%token PRINT
+%token <node> PRINT
 %token<str> TAG
 %token EQUAL
 %token<num> REAL
 %token<integer> INTEGER
 
-%type<num> Expression
+%type<node> Expression
+%type<node> Line
+%type<node> Input
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -37,27 +40,32 @@ extern int yylex (void);
 %start Input
 %%
 
-Input: /* empty */;
-Input: Input Line;
+Input: Line {insertRoot($1);}
+Input: Input Line {insertNextNode($2);}
 
-Line: END
+Line: END {$$ = NULL;}
+Line: Expression END {$$ = $1;};
+Line: PRINT END {printTree();};
+/*Line: PRINT Expression {$$ = create_TP_Print($2);};*/
+/*Line: TAG EQUAL Expression {printf("o valor de %s: %f\n", $1, $3);}*/
 
-Line: Expression END { printTree(); }
-Line: PRINT Expression { printf("esse é o meu print: %f\n", $2);}
-Line: TAG EQUAL Expression {printf("o valor de %s: %f\n", $1, $3);}
+Expression: INTEGER { $$ = create_TP_unit_Integer($1); };
+Expression: REAL { $$ = create_TP_unit_Real($1); };
 
+Expression: REAL PLUS REAL { $$ = create_OP_BIN_F($1, $3, "PLUS");};
+/*Expression: INTEGER PLUS INTEGER { $$ = create_OP_BIN_F($1, $3, "PLUS"); }; */
+Expression: Expression PLUS Expression { $$ = create_EX_BIN_E($1, $3, "PLUS"); };
 
-Expression: INTEGER {printf("isso é um inteiro: %d", $1); };
-Expression: REAL { printf("novo real: %f\n", $1);};
+Expression: REAL MINUS REAL { $$ = create_OP_BIN_F($1, $3, "MINUS"); };
+Expression: INTEGER MINUS INTEGER { $$ = create_OP_BIN_F($1, $3, "MINUS");};
+Expression: Expression TIMES Expression { $$ = $1; };
 
-Expression: REAL PLUS REAL { startTree();create_OP_BIN_F($1, $3, "PLUS"); printf("foi\n");};
-Expression: INTEGER PLUS INTEGER { startTree();create_OP_BIN_F($1, $3, "PLUS"); }; 
-Expression: Expression PLUS Expression { $$ =$1 + $3; };
-Expression: Expression MINUS Expression { $$ = $1 - $3; };
-Expression: Expression TIMES Expression { $$ = $1 * $3; };
-Expression: Expression DIVIDE Expression { $$ = $1 / $3; };
-Expression: MINUS Expression %prec NEG { $$ = -$2; };
-Expression: Expression POWER Expression { $$ = pow($1, $3); };
+Expression: Expression DIVIDE Expression { $$ = $1; };
+
+Expression: MINUS Expression %prec NEG { $$ = $2; };
+
+Expression: Expression POWER Expression { $$ = $1; };
+
 Expression: LEFT Expression RIGHT { $$ = $2; };
 
 %%
@@ -68,7 +76,7 @@ int yyerror(char const *s) {
 
 int main() {
     int ret = yyparse();
-    startTree();
+    
     if (ret){
 	    fprintf(stderr, "%d error found.\n",ret);
     }
