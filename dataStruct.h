@@ -2,14 +2,10 @@
 #define TREE_H
 
 struct NODE;
-extern int teste1;
 extern struct NODE *tree ;    // declaração de uma variável global
                    // como é global, valor inicial é zero.
-void startTree();
 // struct NODE *teste();
 void printTree();
-void insertNextNode(struct NODE *new);
-void teste(int c);
 // int foo(long arg); // declaração de uma função
 // int bar(void);     // outra
 
