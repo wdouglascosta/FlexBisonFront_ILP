@@ -41,9 +41,13 @@ extern int yylex (void);
 %start Program
 %%
 
-Program: List_Exp {root = $1;}
+Program: 
+Program: END
+Program: List_Exp {insertRoot($1);}
+Program: PRINT END{printf("testeeee");}
 
-List_Exp: Exp {$$ = insertNodeList(NULL, $1);}
+
+List_Exp: Exp END {$$ = insertNodeList(NULL, $1);}
 List_Exp: List_Exp Exp {$$ = insertNodeList($1, $2);}
 
 Exp: INTEGER { $$ = create_TP_unit_Integer($1, 0, 0); };

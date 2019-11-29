@@ -40,6 +40,10 @@ struct AST{
 
 struct AST *root;
 
+void printTree(){
+    printf("oooi gentiii\n");
+}
+
 
 struct AST *insertNodeList(struct AST *lista, NODE *node){
     if (lista == NULL ){
@@ -99,6 +103,9 @@ NODE *create_TPBIN(NODE * Left, NODE *Right, int op, int LINE, int COL){
     return new;
 }
 
+insertRoot(NODE *no){
+    root = no;
+}
 // enum yytokentype
 //   {
 //     NUMBER = 258,
@@ -164,6 +171,4 @@ NODE *create_TPBIN(NODE * Left, NODE *Right, int op, int LINE, int COL){
 // }
 
 
-insertRoot(NODE *no){
-    root = no;
-}
+
