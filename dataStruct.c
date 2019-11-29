@@ -3,11 +3,6 @@
 #include <string.h>
 #include "dataStruct.h"
 
-union NUMBER{
-    int integer;
-    float real;
-};
-
 typedef enum TP {
     TP_opbin_F = 1,
     TP_opbin_E,
@@ -39,23 +34,91 @@ typedef union
 } NODE_val;
 
 typedef struct NODE {
-    TP Type;
-
-    NODE_val VALUES;
-
+    enum {
+        TP_OPBIN,
+        TP_TAG,
+        TP_UNIT_REAL,
+        TP_UNIT_INT,
+        TP_ATR,
+        TP_PRINT
+    } TP;
     int LINE;
     int COL;
-
-
-    struct NODE *next;
+    union {
+        struct VAL_OPBIN{
+            enum {ADD, MINUS, TIMES, DIVIDE, EXPO} OP;
+            struct NODE * EX_L;
+            struct NODE * EX_D;
+        }VAL_OPBIN;
+        char *VAL_TAG;
+        float VAL_REAL;
+        int VAL_INT;
+        struct VAL_ATR{
+            char *tag;
+            struct NODE * VALOR;
+        } VAL_ATR;
+        struct NODE * VAL_PRINT;
+        
+        
+    }VALUE;
 }NODE;
 
+struct AST{
+    struct NODE * head;
+    struct AST * tail;
+};
 
-NODE *tree = NULL;
-int nos = 0;
+
+NODE *create_TP_unit_Integer(int UNITVALUE, int LINE, int COL){
+
+    struct NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_UNIT_INT;
+    new -> VALUE.VAL_INT = UNITVALUE;
+    new -> LINE = LINE;
+    new -> COL = COL;
+    
+    return new;
+}
+
+NODE *create_TP_unit_Real(float UNITVALUE, int LINE, int COL){
+
+    struct NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_UNIT_REAL;
+    new -> VALUE.VAL_REAL = UNITVALUE;
+    new -> LINE = LINE;
+    new -> COL = COL;
+    
+    return new;
+}
+
+NODE *create_TPBIN(NODE * Left, NODE *Right, char *op, int LINE, int COL){
+    struct NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_OPBIN;
+    new -> VALUE.VAL_OPBIN.EX_L = Left;
+    new -> VALUE.VAL_OPBIN.EX_D = Right;
+    new -> VALUE.VAL_OPBIN.OP = op;
+    new -> LINE = LINE;
+    new -> COL = COL;
+    
+    return new;
+}
 
 
-int cont;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 char *NumberToString(union NUMBER n){
     if (n.integer != NULL){
@@ -211,17 +274,7 @@ NODE *create_TP_unit_Real(float UNITVALUE){
     return new;
 }
 
-NODE *create_TP_unit_Integer(int UNITVALUE){
-    printf("------------------------valor recebido - %d",UNITVALUE);
-    NODE *new;
-    NODE_val value;
 
-    value.UNITVALUE.integer = UNITVALUE;
-
-    
-    new = createNode(4, value, 100, 101);
-    return new;
-}
 
 NODE *create_TP_Print(struct NODE *ex){
     NODE_val value;

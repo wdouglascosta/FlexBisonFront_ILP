@@ -28,7 +28,7 @@ extern int yylex (void);
 
 %type<node> Expression
 %type<node> Line
-%type<node> Input
+%type<node> Program
 
 %left PLUS MINUS
 %left TIMES DIVIDE
@@ -37,11 +37,21 @@ extern int yylex (void);
 
 %define parse.error verbose
 
-%start Input
+%start Program
 %%
 
-Input: Line {insertRoot($1);}
-Input: Input Line {insertNextNode($2);}
+Program: List_Exp {root = $1;}
+
+List_Exp: Exp {$$ = insertNodeList($1, NULL)}
+List_Exp: List_Exp Exp {$$ = insertNodeList($1, $2);}
+
+Exp: INTEGER { $$ = create_TP_unit_Integer($1, 0, 0); };
+Exp: REAL { $$ = create_TP_unit_Real($1, 0, 0); };
+Exp: Exp PLUS Exp {$$ = create_TPBIN($1, $3, 0, 0)}
+
+
+
+Program: Program Line {insertNextNode($2);}
 
 Line: END {$$ = NULL;}
 Line: Expression END {$$ = $1;};
@@ -49,8 +59,7 @@ Line: PRINT END {printTree();};
 /*Line: PRINT Expression {$$ = create_TP_Print($2);};*/
 /*Line: TAG EQUAL Expression {printf("o valor de %s: %f\n", $1, $3);}*/
 
-Expression: INTEGER { $$ = create_TP_unit_Integer($1); };
-Expression: REAL { $$ = create_TP_unit_Real($1); };
+
 
 Expression: REAL PLUS REAL { $$ = create_OP_BIN_F($1, $3, "PLUS");};
 /*Expression: INTEGER PLUS INTEGER { $$ = create_OP_BIN_F($1, $3, "PLUS"); }; */
