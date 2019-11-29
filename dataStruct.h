@@ -2,7 +2,7 @@
 #define TREE_H
 
 struct NODE;
-extern struct NODE *tree ;    // declaração de uma variável global
+extern struct AST *root ;    // declaração de uma variável global
                    // como é global, valor inicial é zero.
 // struct NODE *teste();
 void printTree();

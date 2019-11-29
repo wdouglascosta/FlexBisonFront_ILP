@@ -16,7 +16,7 @@ typedef struct NODE {
     int COL;
     union {
         struct VAL_OPBIN{
-            enum {ADD, MINUS, TIMES, DIVIDE, EXPO} OP;
+            enum {OP_ADD, OP_MINUS, OP_TIMES, OP_DIVIDE, OP_EXPO} OP;
             struct NODE * EX_L;
             struct NODE * EX_D;
         }VAL_OPBIN;
@@ -38,6 +38,32 @@ struct AST{
     struct AST * tail;
 };
 
+struct AST *root;
+
+
+struct AST *insertNodeList(struct AST *lista, NODE *node){
+    if (lista == NULL ){
+        struct AST *monoList = malloc(sizeof(struct AST));
+        monoList ->head = node;
+        monoList ->tail = NULL;
+        root = monoList;
+        return monoList;
+    } else {
+        insertLastNode(lista, node);
+        return root;
+    }
+}
+
+void insertLastNode(struct AST *listasub, struct NODE *nodesub){
+        if (listasub ->tail == NULL){
+            struct AST *new = malloc(sizeof(struct AST));
+            new -> head = nodesub;
+            new -> tail = NULL;
+            listasub ->tail = new;
+        } else {
+            insertLastNode(listasub ->tail, nodesub);
+        };
+}
 
 NODE *create_TP_unit_Integer(int UNITVALUE, int LINE, int COL){
 
@@ -61,19 +87,36 @@ NODE *create_TP_unit_Real(float UNITVALUE, int LINE, int COL){
     return new;
 }
 
-NODE *create_TPBIN(NODE * Left, NODE *Right, char *op, int LINE, int COL){
+NODE *create_TPBIN(NODE * Left, NODE *Right, int op, int LINE, int COL){
     struct NODE *new = malloc(sizeof(NODE));
     new -> TP = TP_OPBIN;
     new -> VALUE.VAL_OPBIN.EX_L = Left;
     new -> VALUE.VAL_OPBIN.EX_D = Right;
-    new -> VALUE.VAL_OPBIN.OP = 1;
+    new -> VALUE.VAL_OPBIN.OP = op;
     new -> LINE = LINE;
     new -> COL = COL;
     
     return new;
 }
 
-
+// enum yytokentype
+//   {
+//     NUMBER = 258,
+//     LEFT = 259,
+//     RIGHT = 260,
+//     PLUS = 261,
+//     MINUS = 262,
+//     TIMES = 263,
+//     DIVIDE = 264,
+//     POWER = 265,
+//     END = 266,
+//     PRINT = 267,
+//     TAG = 268,
+//     EQUAL = 269,
+//     REAL = 270,
+//     INTEGER = 271,
+//     NEG = 272
+//   };
 
 
 
@@ -121,23 +164,6 @@ NODE *create_TPBIN(NODE * Left, NODE *Right, char *op, int LINE, int COL){
 // }
 
 
-// void insertLastNode(struct NODE *tree, struct NODE *new){
-//         if (tree ->next == NULL){
-//             tree ->next = new;
-//         } else {
-//             insertLastNode(tree ->next, new);
-//         };
-// }
-
-// void insertNextNode(struct NODE *new){
-//     if (tree == NULL){
-//         tree = new;
-//     } else {
-
-//         insertLastNode(tree, new);
-//     }   
-// }
-
 insertRoot(NODE *no){
-    tree = no;
+    root = no;
 }
