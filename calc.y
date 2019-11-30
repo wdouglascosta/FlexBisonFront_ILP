@@ -7,6 +7,10 @@
 int yyerror (char const *s);
 extern int yylex (void);
 
+  int line;
+  int colum;
+  line = 66;
+  colum = 77;
 %}
 
 %union{
@@ -21,6 +25,7 @@ extern int yylex (void);
 %token LEFT RIGHT
 %token PLUS MINUS TIMES DIVIDE POWER
 %token END
+%token END_PROGRAM
 %token <node> PRINT
 %token<str> TAG
 %token EQUAL
@@ -39,20 +44,22 @@ extern int yylex (void);
 %define parse.error verbose
 
 %start Program
+
 %%
 
-Program: 
-Program: END
-Program: List_Exp {insertRoot($1);}
-Program: PRINT END{printf("testeeee");}
+Program: List_Exp END_PROGRAM {printf("---INICIAL -> ListaEx---\n");insertRoot($1);}
 
+List_Exp: END
+List_Exp: List_Exp Exp END {printf("---LISTA_EXP e EXPRESSAO---\n");$$ = insertNodeList($1, $2);}
+List_Exp: Exp END {printf("---Expressão---\n");$$ = insertNodeList(NULL, $1);}
 
-List_Exp: Exp END {$$ = insertNodeList(NULL, $1);}
-List_Exp: List_Exp Exp {$$ = insertNodeList($1, $2);}
-
-Exp: INTEGER { $$ = create_TP_unit_Integer($1, 0, 0); };
-Exp: REAL { $$ = create_TP_unit_Real($1, 0, 0); };
-Exp: Exp PLUS Exp {$$ = create_TPBIN($1, $3, 261 ,0, 0);}
+Exp: PRINT LEFT Exp RIGHT {$$ = create_TP_Print($3, line, colum);}
+Exp: INTEGER        {$$ = create_TP_unit_Integer($1, line, colum); };
+Exp: REAL           {$$ = create_TP_unit_Real($1, line, colum); };
+Exp: Exp PLUS Exp   {$$ = create_TPBIN($1, $3, 1 ,line, colum);}
+Exp: Exp MINUS Exp  {$$ = create_TPBIN($1, $3, 2, line, colum);}
+Exp: Exp TIMES Exp  {$$ = create_TPBIN($1, $3, 3, line, colum);}
+Exp: Exp DIVIDE Exp {$$ = create_TPBIN($1, $3, 4, line, colum);}
 
 %%
 
@@ -61,13 +68,13 @@ int yyerror(char const *s) {
 }
 
 int main() {
+
     int ret = yyparse();
-    
+    printTree(root);
+    printf("aqui o programa ACABOU \n");
     if (ret){
 	    fprintf(stderr, "%d error found.\n",ret);
     }
-
-
     return 0;
 }
 

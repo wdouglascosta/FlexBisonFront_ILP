@@ -16,7 +16,7 @@ typedef struct NODE {
     int COL;
     union {
         struct VAL_OPBIN{
-            enum {OP_ADD, OP_MINUS, OP_TIMES, OP_DIVIDE, OP_EXPO} OP;
+            enum {OP_ADD = 1, OP_MINUS, OP_TIMES, OP_DIVIDE, OP_EXPO} OP;
             struct NODE * EX_L;
             struct NODE * EX_D;
         }VAL_OPBIN;
@@ -39,11 +39,6 @@ struct AST{
 };
 
 struct AST *root;
-
-void printTree(){
-    printf("oooi gentiii\n");
-}
-
 
 struct AST *insertNodeList(struct AST *lista, NODE *node){
     if (lista == NULL ){
@@ -68,6 +63,7 @@ void insertLastNode(struct AST *listasub, struct NODE *nodesub){
             insertLastNode(listasub ->tail, nodesub);
         };
 }
+
 
 NODE *create_TP_unit_Integer(int UNITVALUE, int LINE, int COL){
 
@@ -103,8 +99,76 @@ NODE *create_TPBIN(NODE * Left, NODE *Right, int op, int LINE, int COL){
     return new;
 }
 
-insertRoot(NODE *no){
-    root = no;
+NODE *create_TP_Print(NODE *no, int line, int colum){
+    NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_PRINT;
+    new -> VALUE.VAL_PRINT = no;
+    new -> LINE = line;
+    new -> COL = colum;
+    return new;
+}
+
+void printTree(struct AST *branch){
+    if (branch == NULL || branch -> head == NULL)    {
+        printf("----\nÁrvore ou ramo vazio.\n----\n");
+        return;
+    }
+    printNode(branch ->head, 0);
+
+    if (branch ->tail == NULL){
+        printf("FIM\n");
+        return;
+    }else{
+        printTree(branch ->tail);
+    }
+}
+void printTab(int tab){
+    for (int i = 0; i < tab; i++)    {
+        printf("--");
+    }
+    
+}
+void printNode(NODE *no, int tab){
+    tab++;
+    switch (no -> TP)
+    {
+    case TP_OPBIN:
+        printTab(tab);
+        printf("| OP BIN |\n");
+        printTab(tab);
+        printf("Operação: %d\n", no ->VALUE.VAL_OPBIN.OP);
+        printTab(tab);
+        printf("Exp Esq ->\n");
+        printTab(tab);
+        printNode(no->VALUE.VAL_OPBIN.EX_L, tab);
+        printTab(tab);
+        printf("Exp Dir ->\n");
+        printTab(tab);
+        printNode(no->VALUE.VAL_OPBIN.EX_D,tab);
+        break;
+    case TP_UNIT_INT:
+        printTab(tab);
+        printf("| TP_UNIT_INT |\n");
+        printTab(tab);
+        printf("Inteiro: ");
+        printf("%d\n", no->VALUE.VAL_INT);
+        break;
+    case TP_UNIT_REAL:
+        printTab(tab);
+        printf("| TP_UNIT_REAL |\n");
+        printTab(tab);
+        printf("Real: ");
+        printf("%f\n", no->VALUE.VAL_REAL);
+        break;
+
+    default:
+        break;
+    }
+}
+    
+void insertRoot(struct AST *lista){
+    root = lista;
+    printf("caiu na insert Root!\n");
 }
 // enum yytokentype
 //   {
@@ -124,51 +188,3 @@ insertRoot(NODE *no){
 //     INTEGER = 271,
 //     NEG = 272
 //   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// char *getTypeNode(TP type){
-//     switch (type)
-//     {
-    
-//         case TP_opbin_F:
-//         return "TP_opbin_F";
-//         break;
-        
-//         case TP_opbin_E:
-//         return "TP_opbin_E";
-//         break;
-        
-//         case TP_atrib:
-//         return "TP_atrib";
-//         break;
-
-//         case TP_unit_value:
-//         return "TP_unit_value";
-//         break;
-
-//         case TP_print:
-//         return "TP_print";
-//         break;
-    
-//         default:
-//         return "ERROR";
-//             break;
-//     }
-// }
-
-
-

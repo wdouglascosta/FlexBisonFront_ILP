@@ -13,8 +13,8 @@ real {integer}("."{integer})?{exponent}?
 TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 
 %%
-
-"print" col ++; return PRINT;
+"fim" return END_PROGRAM;
+"print" return PRINT;
 {white} { }
 {TAG} {col++; yylval.str=strdup(yytext); return TAG;}
 {integer} {col++; yylval.integer=atoi(yytext); return INTEGER;}
@@ -29,7 +29,7 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 "(" return LEFT;
 ")" return RIGHT;
 "=" return EQUAL;
-"\n" return END;
+";" return END;
 
 %%
 
