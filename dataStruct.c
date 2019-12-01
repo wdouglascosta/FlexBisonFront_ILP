@@ -38,6 +38,7 @@ struct AST{
     struct AST * tail;
 };
 
+
 struct AST *root;
 
 struct AST *insertNodeList(struct AST *lista, NODE *node){
@@ -107,6 +108,24 @@ NODE *create_TP_Print(NODE *no, int line, int colum){
     new -> COL = colum;
     return new;
 }
+NODE *create_TP_ATR(char *var, NODE *no, int line, int colum){
+    NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_ATR;
+    new -> VALUE.VAL_ATR.tag = var;
+    new -> VALUE.VAL_ATR.VALOR = no;
+    new -> LINE = line;
+    new -> COL = colum;
+    return new;
+}
+
+NODE *create_TP_TAG(char *var, int line, int colum){
+    NODE *new = malloc(sizeof(NODE));
+    new -> TP = TP_TAG;
+    new -> VALUE.VAL_TAG = var;
+    new -> LINE = line;
+    new -> COL = colum;
+    return new;
+}
 
 void printTree(struct AST *branch){
     if (branch == NULL || branch -> head == NULL)    {
@@ -130,11 +149,14 @@ void printTab(int tab){
 }
 void printNode(NODE *no, int tab){
     tab++;
+    printTab(tab);
+    printf("Linha: %d\n", no->LINE);
+    printTab(tab);
+    printf("Colun: %d\n", no->COL);
     switch (no -> TP)
     {
     case TP_OPBIN:
-        printTab(tab);
-        printf("| OP BIN |\n");
+        printf("|OP BIN|\n");
         printTab(tab);
         printf("Operação: %d\n", no ->VALUE.VAL_OPBIN.OP);
         printTab(tab);
@@ -147,18 +169,39 @@ void printNode(NODE *no, int tab){
         printNode(no->VALUE.VAL_OPBIN.EX_D,tab);
         break;
     case TP_UNIT_INT:
-        printTab(tab);
-        printf("| TP_UNIT_INT |\n");
+        printf("|TP_UNIT_INT|\n");
         printTab(tab);
         printf("Inteiro: ");
         printf("%d\n", no->VALUE.VAL_INT);
         break;
     case TP_UNIT_REAL:
-        printTab(tab);
         printf("| TP_UNIT_REAL |\n");
         printTab(tab);
         printf("Real: ");
         printf("%f\n", no->VALUE.VAL_REAL);
+        break;
+
+    case TP_PRINT:
+        printf("| TP PRINT |\n");
+        printTab(tab);
+        printf("Exp ->\n");
+        printTab(tab);
+        printNode(no ->VALUE.VAL_PRINT,tab);
+        break;
+    case TP_ATR:
+        printf("| TP ATR |\n");
+        printTab(tab);
+        printf("Nome Var: %s\n", no ->VALUE.VAL_ATR.tag);
+        printTab(tab);
+        printf("Valor -> \n");
+        printTab(tab);
+        printNode(no->VALUE.VAL_ATR.VALOR, tab);
+        break;
+    case TP_TAG:
+        printf("| TP TAG |\n");
+        printTab(tab);
+        printf("Nome Var: %s\n", no ->VALUE.VAL_TAG);
+        printTab(tab);
         break;
 
     default:

@@ -1,6 +1,9 @@
 %{
 
 #include "calc.tab.h"
+# include <stdio.h>
+# include <stdlib.h>
+#include <string.h>
 extern int col = 0;
 
 %}
@@ -16,19 +19,19 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 "fim" return END_PROGRAM;
 "print" return PRINT;
 {white} { }
-{TAG} {col++; yylval.str=strdup(yytext); return TAG;}
-{integer} {col++; yylval.integer=atoi(yytext); return INTEGER;}
+{TAG} {yylval.str=strdup(yytext); return TAG;}
+{integer} {yylval.integer=atoi(yytext);printf("comprimeiro: %d\n", strlen(yytext));yylloc.first_column =+ strlen(yytext) ;return INTEGER;}
 {real} { yylval.num=atof(yytext); return REAL; }
 
 
-"+" return PLUS;
+"=" {yylloc.first_column++; return EQUAL;}
+"+" {yylloc.first_column++; return PLUS;}
 "-" return MINUS;
 "*" return TIMES;
 "/" return DIVIDE;
 "^" return POWER;
 "(" return LEFT;
 ")" return RIGHT;
-"=" return EQUAL;
 ";" return END;
 
 %%
