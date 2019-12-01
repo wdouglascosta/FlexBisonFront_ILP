@@ -156,6 +156,7 @@ void printNode(NODE *no, int tab){
     switch (no -> TP)
     {
     case TP_OPBIN:
+        printTab(tab);
         printf("|OP BIN|\n");
         printTab(tab);
         printf("Operação: %d\n", no ->VALUE.VAL_OPBIN.OP);
@@ -169,12 +170,14 @@ void printNode(NODE *no, int tab){
         printNode(no->VALUE.VAL_OPBIN.EX_D,tab);
         break;
     case TP_UNIT_INT:
+        printTab(tab);
         printf("|TP_UNIT_INT|\n");
         printTab(tab);
         printf("Inteiro: ");
         printf("%d\n", no->VALUE.VAL_INT);
         break;
     case TP_UNIT_REAL:
+        printTab(tab);
         printf("| TP_UNIT_REAL |\n");
         printTab(tab);
         printf("Real: ");
@@ -182,6 +185,7 @@ void printNode(NODE *no, int tab){
         break;
 
     case TP_PRINT:
+        printTab(tab);
         printf("| TP PRINT |\n");
         printTab(tab);
         printf("Exp ->\n");
@@ -189,6 +193,7 @@ void printNode(NODE *no, int tab){
         printNode(no ->VALUE.VAL_PRINT,tab);
         break;
     case TP_ATR:
+        printTab(tab);
         printf("| TP ATR |\n");
         printTab(tab);
         printf("Nome Var: %s\n", no ->VALUE.VAL_ATR.tag);
@@ -198,6 +203,7 @@ void printNode(NODE *no, int tab){
         printNode(no->VALUE.VAL_ATR.VALOR, tab);
         break;
     case TP_TAG:
+        printTab(tab);
         printf("| TP TAG |\n");
         printTab(tab);
         printf("Nome Var: %s\n", no ->VALUE.VAL_TAG);

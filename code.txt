@@ -1,0 +1,10 @@
+10000+20000+30000;
+3*4;
+variavel;
+a = 10+11;
+print(100+101*3);
+b;
+
+         1+1;
+variavelnomelongo = a + b;
+fim
