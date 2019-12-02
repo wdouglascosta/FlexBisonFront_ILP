@@ -33,11 +33,11 @@ system_info()
 if [[ -n $1 && $1 == clean ]]; then
 
 #   system_info
-    rm -rf *.o calc.lex.c calc.tab.* calc
+    rm -rf *.o calc.lex.c calc.tab.* calc output.c 
 
   
 else
-    rm -rf *.o calc.lex.c calc.tab.* calc
+    rm -rf *.o calc.lex.c calc.tab.* calc output.c 
     gcc -c -g dataStruct.c -o dataStruct.o
 
     flex -o calc.lex.c calc.l
@@ -45,4 +45,5 @@ else
     gcc -c -g calc.lex.c -o calc.lex.o
 
     gcc -g -o calc  calc.lex.o calc.tab.c -lfl -lm 
+
 fi

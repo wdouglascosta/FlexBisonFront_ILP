@@ -24,7 +24,7 @@ extern FILE *yyin;
 
 %token<num> NUMBER
 %token LEFT RIGHT
-%token PLUS MINUS TIMES DIVIDE POWER
+%token PLUS MINUS TIMES DIVIDE EXPO
 %token END
 %token END_PROGRAM
 %token <node> PRINT
@@ -63,6 +63,7 @@ Exp: Exp PLUS Exp         {$$ = create_TPBIN($1, $3, 1 ,@1.first_line, @1.first_
 Exp: Exp MINUS Exp        {$$ = create_TPBIN($1, $3, 2, @1.first_line, @1.first_column);}
 Exp: Exp TIMES Exp        {$$ = create_TPBIN($1, $3, 3, @1.first_line, @1.first_column);}
 Exp: Exp DIVIDE Exp       {$$ = create_TPBIN($1, $3, 4, @1.first_line, @1.first_column);}
+Exp: Exp EXPO Exp         {$$ = create_TPBIN($1, $3, 5, @1.first_line, @1.first_column);}
 Exp: TAG EQUAL Exp        {$$ = create_TP_ATR($1, $3, @1.first_line, @1.first_column);}
 
 %%
@@ -77,6 +78,8 @@ int main() {
     yyin = fopen("code.txt", "r");
     int ret = yyparse();
     printTree(root);
+    printf("***Inicio da Execução***\n");
+    runEngine(root);
     if (ret){
 	    fprintf(stderr, "%d error found.\n",ret);
     }

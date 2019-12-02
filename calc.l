@@ -30,7 +30,7 @@ TAG ^[a-zA-Z_$][a-zA-Z_$0-9]*
 "-" {yylloc.first_column++; return MINUS;}
 "*" {yylloc.first_column++; return TIMES;}
 "/" {yylloc.first_column++; return DIVIDE;}
-"^" {yylloc.first_column++; return POWER;}
+"^" {yylloc.first_column++; return EXPO;}
 "(" {yylloc.first_column++; return LEFT;}
 ")" {yylloc.first_column++; return RIGHT;}
 ";" {yylloc.first_column++; return END;}

@@ -73,7 +73,7 @@ NODE *create_TP_unit_Integer(int UNITVALUE, int LINE, int COL){
     new -> VALUE.VAL_INT = UNITVALUE;
     new -> LINE = LINE;
     new -> COL = COL;
-    
+
     return new;
 }
 
@@ -143,16 +143,14 @@ void printTree(struct AST *branch){
 }
 void printTab(int tab){
     for (int i = 0; i < tab; i++)    {
-        printf("--");
+        printf("___");
     }
     
 }
 void printNode(NODE *no, int tab){
     tab++;
-    printTab(tab);
+    // printTab(tab);
     printf("Linha: %d\n", no->LINE);
-    printTab(tab);
-    printf("Colun: %d\n", no->COL);
     switch (no -> TP)
     {
     case TP_OPBIN:
@@ -217,23 +215,120 @@ void printNode(NODE *no, int tab){
     
 void insertRoot(struct AST *lista){
     root = lista;
-    printf("caiu na insert Root!\n");
 }
-// enum yytokentype
-//   {
-//     NUMBER = 258,
-//     LEFT = 259,
-//     RIGHT = 260,
-//     PLUS = 261,
-//     MINUS = 262,
-//     TIMES = 263,
-//     DIVIDE = 264,
-//     POWER = 265,
-//     END = 266,
-//     PRINT = 267,
-//     TAG = 268,
-//     EQUAL = 269,
-//     REAL = 270,
-//     INTEGER = 271,
-//     NEG = 272
-//   };
+//MOTOR DE EXECUÇÃO====================================================================
+struct cmdLine{
+    char *cmd;
+    struct cmdLine *next;
+};
+int i, j;
+
+
+int run_OP_BIN_INT(NODE *opBin){
+    
+    if (opBin ->TP == TP_UNIT_INT){
+        return opBin ->VALUE.VAL_INT;
+        
+    } else {
+        switch (opBin->VALUE.VAL_OPBIN.OP)
+        {
+        case 1:
+            /* ADD */
+            i = run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_L);
+            j = run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_D);
+            
+            return i + j; 
+            break;
+        case 2:
+            /* MINUS */
+            return run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_L) - run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 3:
+            /* TIMES */
+            return run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_L) * run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 4:
+            /* DIVIDE */
+            return run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_L) / run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 5:
+            /* EXPO */
+            return pow(run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_L), run_OP_BIN_INT(opBin->VALUE.VAL_OPBIN.EX_D) );
+            break;
+        default:
+            break;
+        }
+    }
+    //OP_ADD = 1, OP_MINUS, OP_TIMES, OP_DIVIDE, OP_EXPO
+}
+
+float run_OP_BIN_REAL(NODE *opBin){
+    if (opBin ->TP == TP_UNIT_REAL){
+        return opBin ->VALUE.VAL_REAL;
+        
+    } else {
+        switch (opBin->VALUE.VAL_OPBIN.OP)
+        {
+        case 1:
+            /* ADD */
+            return run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_L) + run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 2:
+            /* MINUS */
+            return run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_L) - run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 3:
+            /* TIMES */
+            return run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_L) * run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 4:
+            /* DIVIDE */
+            return run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_L) / run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_D) ;
+            break;
+        case 5:
+            /* EXPO */
+            return pow(run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_L), run_OP_BIN_REAL(opBin->VALUE.VAL_OPBIN.EX_D) );
+            break;
+        default:
+            break;
+        }
+    }
+    //OP_ADD = 1, OP_MINUS, OP_TIMES, OP_DIVIDE, OP_EXPO
+}
+void runEngine(struct AST *root){
+    if (root == NULL){
+        printf("Arvore de instruções vazia\n");
+        return;
+    } 
+    if (root ->head->TP == TP_OPBIN ){
+        
+        printf("%d\n", run_OP_BIN_INT(root->head));
+    }
+
+    if (root -> head -> TP == TP_ATR){
+        printf("%s: %d\n", root ->head->VALUE.VAL_ATR.tag, run_OP_BIN_INT(root ->head->VALUE.VAL_ATR.VALOR));
+    }
+
+    if (root ->tail == NULL){
+        printf("***Fim da Execução***\n");
+    
+    } else {
+        runEngine(root ->tail);
+    }
+    
+    
+    
+
+    // FILE *fp = fopen("output.c", "wb");
+    // char *compiled = "printf(\"maoeeee\");";
+    // char *template = "#include <stdio.h> \n int main(){";
+    // fputs(template, fp);
+    // fputs(compiled, fp);
+    // fputs("}", fp);
+    // fclose(fp);
+
+
+    /* Close file to save file data */
+}
+
+
